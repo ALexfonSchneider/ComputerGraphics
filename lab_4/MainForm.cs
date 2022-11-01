@@ -27,7 +27,7 @@ namespace lab_4
 			grafic_width = draw_panel.Width;
 			grafic_height = draw_panel.Height;
 
-			polygons = Polygon.ReadPolygons("polygons.txt");
+			//polygons = Polygon.ReadPolygons("polygons.txt");
 		}
 		void Draw_Random_Lines(int count_of_rand_point)
 		{
@@ -58,7 +58,28 @@ namespace lab_4
 			int X2 = (int)(X2_numericUpDown.Value);
 			int Y2 = (int)(Y2_numericUpDown.Value);
 
-			var map = CG.Brethenhem_algoritm(new Point(X1, -Y1), new Point(X2, -Y2), (grafic_width, grafic_height));
+			var p1 = new Point(X1, -Y1);
+			var p2 = new Point(X2, -Y2);
+
+			var panel_size = (grafic_width, grafic_height);
+
+			Bitmap map = null;
+
+			if (bouds_checkBox.Checked)
+			{
+				int x_min = (int)x_min_numericUpDown.Value;
+				int x_max = (int)x_max_numericUpDown.Value;
+				int y_min = (int)y_min_numericUpDown.Value;
+				int y_max = (int)y_max_numericUpDown.Value;
+
+				map = CG.middle_point_clip(p1, p2, x_min, x_max, y_min, y_max, panel_size);
+
+				if (map == null) return;
+			}
+			else
+			{
+				map = CG.Brethenhem_algoritm(p1, p2, panel_size);
+			}
 
 			g.DrawImage(map, 0, 0);
 		}

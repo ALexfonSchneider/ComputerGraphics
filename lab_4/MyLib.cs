@@ -35,14 +35,6 @@ namespace lab_4
     {
         public List<Point> points;
         public List<Edge> edges;
-        public int N
-        {
-            get
-            {
-                return (points == null) ? 0 : points.Count;
-            }
-        }
-
         public Polygon(List<Point> points)
         {
             int edge_index = 0;
@@ -220,7 +212,69 @@ namespace lab_4
 
             return map;
         }
+        public static void Swap<T>(ref T obj1, ref T obj2) where T : class
+        {
+            var temp = obj1;
+            obj1 = obj2;
+            obj2 = temp;
+        }
+
+        public static bool any_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
+        {
+            if (p1.y < y_min && p2.y < y_min ||
+               p1.y > y_max && p2.y > y_max ||
+               p1.x < x_min && p2.x < x_min ||
+               p1.x > x_max && p2.x > x_max) return false;
+
+            return true;
+        }
+
+        public static bool all_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
+        {
+            if((p1.y > y_min && p1.y < y_max && p1.x > x_min && p1.x < x_max) && (p2.y > y_min && p2.y < y_max && p2.x > x_min && p2.x < x_max))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        //public static bool PolyClip(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
+        //{
+        //    if (p1.y > p2.y) Swap<Point>(ref p1, ref p2);
+
+        //    if (!in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return false;
+
+        //    float dx, dy, dxy;
+
+        //    var recalc = () => { dx = p1.x - p2.x; dy = p1.y - p2.y; dxy = p1.x * p2.y - p1.y * p2.x; };
+        //}
+
+        public static Bitmap? middle_point_clip(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max, (int w, int h) panel_size)
+        {
+            int lengthX = Math.Abs(p2.x - p1.x);
+            int lengthY = Math.Abs(p2.y - p1.y);
+
+            if (lengthX < 0 || lengthY < 0) return null;
+            if (!any_in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return null;
+            if(all_in_bounds(p1 , p2 , x_min, x_max, y_min, y_max))
+            {
+                return Brethenhem_algoritm(p1, p2, panel_size);
+            }
+
+            var bitmap = middle_point_clip(p1, new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), 
+                x_min, x_max, y_min, y_max, panel_size);
+
+            if (bitmap != null) return bitmap;
+
+            bitmap = middle_point_clip(new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), p2, 
+                x_min, x_max, y_min, y_max,  panel_size);
+
+            return bitmap;
+        }
     }
+
+    
+
 }
 
 

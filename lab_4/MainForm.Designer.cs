@@ -34,41 +34,41 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.bouds_checkBox = new System.Windows.Forms.CheckBox();
             this.draw_poly_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
             this.draw_button = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.y_max_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.Y2_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.x_max_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.X2_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.y_min_numericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.x_min_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.Y1_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.X1_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.panel2 = new System.Windows.Forms.Panel();
             this.random_button = new System.Windows.Forms.Button();
             this.count_of_rand_points_numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.draw_panel = new System.Windows.Forms.Panel();
-            this.cbouds_heckBox = new System.Windows.Forms.CheckBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.x_min_numericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.y_min_numericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.x_max_numericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.y_max_numericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.panel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.y_max_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y2_numericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.x_max_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.X2_numericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.y_min_numericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.x_min_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y1_numericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.X1_numericUpDown)).BeginInit();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.count_of_rand_points_numericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.x_min_numericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.y_min_numericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.x_max_numericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.y_max_numericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // panel
@@ -113,7 +113,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.cbouds_heckBox);
+            this.panel1.Controls.Add(this.bouds_checkBox);
             this.panel1.Controls.Add(this.draw_poly_button);
             this.panel1.Controls.Add(this.clear_button);
             this.panel1.Controls.Add(this.draw_button);
@@ -134,6 +134,27 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1154, 133);
             this.panel1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(1050, 48);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(94, 29);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "RandPoints";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.random_button_Click);
+            // 
+            // bouds_checkBox
+            // 
+            this.bouds_checkBox.AutoSize = true;
+            this.bouds_checkBox.Location = new System.Drawing.Point(631, 51);
+            this.bouds_checkBox.Name = "bouds_checkBox";
+            this.bouds_checkBox.Size = new System.Drawing.Size(106, 24);
+            this.bouds_checkBox.TabIndex = 3;
+            this.bouds_checkBox.Text = "use bounds";
+            this.bouds_checkBox.UseVisualStyleBackColor = true;
+            this.bouds_checkBox.CheckedChanged += new System.EventHandler(this.cbouds_heckBox_CheckedChanged);
             // 
             // draw_poly_button
             // 
@@ -165,6 +186,15 @@
             this.draw_button.UseVisualStyleBackColor = true;
             this.draw_button.Click += new System.EventHandler(this.draw_button_Click);
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(937, 25);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(17, 20);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Y";
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -174,6 +204,15 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Y";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(777, 24);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(18, 20);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "X";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -182,6 +221,23 @@
             this.label1.Size = new System.Drawing.Size(18, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "X";
+            // 
+            // y_max_numericUpDown
+            // 
+            this.y_max_numericUpDown.Location = new System.Drawing.Point(894, 81);
+            this.y_max_numericUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.y_max_numericUpDown.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.y_max_numericUpDown.Name = "y_max_numericUpDown";
+            this.y_max_numericUpDown.Size = new System.Drawing.Size(150, 27);
+            this.y_max_numericUpDown.TabIndex = 0;
             // 
             // Y2_numericUpDown
             // 
@@ -200,6 +256,23 @@
             this.Y2_numericUpDown.Size = new System.Drawing.Size(150, 27);
             this.Y2_numericUpDown.TabIndex = 0;
             // 
+            // x_max_numericUpDown
+            // 
+            this.x_max_numericUpDown.Location = new System.Drawing.Point(738, 81);
+            this.x_max_numericUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.x_max_numericUpDown.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.x_max_numericUpDown.Name = "x_max_numericUpDown";
+            this.x_max_numericUpDown.Size = new System.Drawing.Size(150, 27);
+            this.x_max_numericUpDown.TabIndex = 0;
+            // 
             // X2_numericUpDown
             // 
             this.X2_numericUpDown.Location = new System.Drawing.Point(19, 73);
@@ -216,6 +289,40 @@
             this.X2_numericUpDown.Name = "X2_numericUpDown";
             this.X2_numericUpDown.Size = new System.Drawing.Size(150, 27);
             this.X2_numericUpDown.TabIndex = 0;
+            // 
+            // y_min_numericUpDown
+            // 
+            this.y_min_numericUpDown.Location = new System.Drawing.Point(894, 48);
+            this.y_min_numericUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.y_min_numericUpDown.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.y_min_numericUpDown.Name = "y_min_numericUpDown";
+            this.y_min_numericUpDown.Size = new System.Drawing.Size(150, 27);
+            this.y_min_numericUpDown.TabIndex = 0;
+            // 
+            // x_min_numericUpDown
+            // 
+            this.x_min_numericUpDown.Location = new System.Drawing.Point(738, 48);
+            this.x_min_numericUpDown.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.x_min_numericUpDown.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.x_min_numericUpDown.Name = "x_min_numericUpDown";
+            this.x_min_numericUpDown.Size = new System.Drawing.Size(150, 27);
+            this.x_min_numericUpDown.TabIndex = 0;
             // 
             // Y1_numericUpDown
             // 
@@ -287,113 +394,6 @@
             this.draw_panel.Size = new System.Drawing.Size(1513, 805);
             this.draw_panel.TabIndex = 2;
             // 
-            // cbouds_heckBox
-            // 
-            this.cbouds_heckBox.AutoSize = true;
-            this.cbouds_heckBox.Location = new System.Drawing.Point(631, 51);
-            this.cbouds_heckBox.Name = "cbouds_heckBox";
-            this.cbouds_heckBox.Size = new System.Drawing.Size(106, 24);
-            this.cbouds_heckBox.TabIndex = 3;
-            this.cbouds_heckBox.Text = "use bounds";
-            this.cbouds_heckBox.UseVisualStyleBackColor = true;
-            this.cbouds_heckBox.CheckedChanged += new System.EventHandler(this.cbouds_heckBox_CheckedChanged);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(1050, 48);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "RandPoints";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.random_button_Click);
-            // 
-            // x_min_numericUpDown
-            // 
-            this.x_min_numericUpDown.Location = new System.Drawing.Point(738, 48);
-            this.x_min_numericUpDown.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.x_min_numericUpDown.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.x_min_numericUpDown.Name = "x_min_numericUpDown";
-            this.x_min_numericUpDown.Size = new System.Drawing.Size(150, 27);
-            this.x_min_numericUpDown.TabIndex = 0;
-            // 
-            // y_min_numericUpDown
-            // 
-            this.y_min_numericUpDown.Location = new System.Drawing.Point(894, 48);
-            this.y_min_numericUpDown.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.y_min_numericUpDown.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.y_min_numericUpDown.Name = "y_min_numericUpDown";
-            this.y_min_numericUpDown.Size = new System.Drawing.Size(150, 27);
-            this.y_min_numericUpDown.TabIndex = 0;
-            // 
-            // x_max_numericUpDown
-            // 
-            this.x_max_numericUpDown.Location = new System.Drawing.Point(738, 81);
-            this.x_max_numericUpDown.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.x_max_numericUpDown.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.x_max_numericUpDown.Name = "x_max_numericUpDown";
-            this.x_max_numericUpDown.Size = new System.Drawing.Size(150, 27);
-            this.x_max_numericUpDown.TabIndex = 0;
-            // 
-            // y_max_numericUpDown
-            // 
-            this.y_max_numericUpDown.Location = new System.Drawing.Point(894, 81);
-            this.y_max_numericUpDown.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.y_max_numericUpDown.Minimum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            -2147483648});
-            this.y_max_numericUpDown.Name = "y_max_numericUpDown";
-            this.y_max_numericUpDown.Size = new System.Drawing.Size(150, 27);
-            this.y_max_numericUpDown.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(777, 24);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(18, 20);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "X";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(937, 25);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(17, 20);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Y";
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -408,16 +408,16 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.y_max_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y2_numericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.x_max_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.X2_numericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.y_min_numericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.x_min_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Y1_numericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.X1_numericUpDown)).EndInit();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.count_of_rand_points_numericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.x_min_numericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.y_min_numericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.x_max_numericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.y_max_numericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -440,7 +440,7 @@
         private Button random_button;
         private Button draw_poly_button;
         private Button button1;
-        private CheckBox cbouds_heckBox;
+        private CheckBox bouds_checkBox;
         private Label label4;
         private Label label3;
         private NumericUpDown y_max_numericUpDown;
