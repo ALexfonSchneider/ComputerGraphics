@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace lab_4
 {
+    public delegate float Function(float arg);
+
     class Point
     {
         public int x { get; set; }
@@ -23,12 +25,52 @@ namespace lab_4
 
         public Point A;
         public Point B;
+
+        public Function fx;
+        public Function fy;
+
+        public float lengthX { get; }
+        public float lengthY { get; }
+        public float tan { get; }
+
         public Edge(Point A, Point B, int number = -1)
         {
             this.A = A;
             this.B = B;
 
+            lengthX = B.x - A.x;
+            lengthY = B.y - A.y;
+            tan = lengthY / lengthX;
+
+            fx = delegate (float x)
+            {
+                return A.y + tan * x - tan*A.x; // y - tan * x = A.y - tan*A.x
+            };
+
+            fy = delegate (float y)
+            {
+                return (y - A.y) / tan + A.x;
+            };
+
             this.number = number;
+        }
+
+        public Point intersection_point(Edge p2)
+        {
+            var x = ((this.A.y - this.tan * this.A.x) - (p2.A.y - p2.tan * p2.A.x)) / (p2.tan - this.tan);
+
+            var y = this.fx(x);
+
+            return new Point((int)x, (int)y);
+        }
+
+        public bool is_point_below(Point p1)
+        {
+            var x = (int)fy(p1.y);
+            var y = (int)fx(p1.x);
+
+            if (p1.x == x && p1.y == y) return true;
+            else return false;
         }
     }
     class Polygon
@@ -221,33 +263,40 @@ namespace lab_4
 
         public static bool any_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
         {
-            if (p1.y < y_min && p2.y < y_min ||
-               p1.y > y_max && p2.y > y_max ||
-               p1.x < x_min && p2.x < x_min ||
-               p1.x > x_max && p2.x > x_max) return false;
+            if (p1.y <= y_min && p2.y <= y_min ||
+               p1.y >= y_max && p2.y >= y_max ||
+               p1.x <= x_min && p2.x <= x_min ||
+               p1.x >= x_max && p2.x >= x_max) return false;
 
             return true;
         }
 
         public static bool all_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
         {
-            if((p1.y > y_min && p1.y < y_max && p1.x > x_min && p1.x < x_max) && (p2.y > y_min && p2.y < y_max && p2.x > x_min && p2.x < x_max))
+            if((p1.y >= y_min && p1.y <= y_max && p1.x >= x_min && p1.x <= x_max) && (p2.y >= y_min && p2.y <= y_max && p2.x >= x_min && p2.x <= x_max))
             {
                 return true;
             }
             return false;
         }
 
-        //public static bool PolyClip(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
-        //{
-        //    if (p1.y > p2.y) Swap<Point>(ref p1, ref p2);
+        public static Bitmap PolyClip(Point p1, Point p2, Polygon bounds, (int w, int h) panel_size)
+        {
+            Edge line = new Edge(p1, p2);
 
-        //    if (!in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return false;
+            foreach(var edge in bounds.edges)
+            {
+                var interseption_point = line.intersection_point(edge);
 
-        //    float dx, dy, dxy;
+                if(edge.is_point_below(interseption_point))
+                {
+                    p1.x = interseption_point.x;
+                    p1.y = interseption_point.y;
+                }
+            }
 
-        //    var recalc = () => { dx = p1.x - p2.x; dy = p1.y - p2.y; dxy = p1.x * p2.y - p1.y * p2.x; };
-        //}
+            return Brethenhem_algoritm(p1, p2, panel_size);
+        }
 
         public static Bitmap? middle_point_clip(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max, (int w, int h) panel_size)
         {

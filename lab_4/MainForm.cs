@@ -15,7 +15,9 @@ namespace lab_4
 		Graphics g;
 		List<Polygon> polygons;
 
-		public int grafic_width { get; private set; }
+		Output console;
+
+        public int grafic_width { get; private set; }
 		public int grafic_height { get; private set; }
 
 		public MainForm()
@@ -26,6 +28,9 @@ namespace lab_4
 
 			grafic_width = draw_panel.Width;
 			grafic_height = draw_panel.Height;
+
+			console = new Output();
+			console.Show();
 
 			//polygons = Polygon.ReadPolygons("polygons.txt");
 		}
