@@ -32,7 +32,7 @@ namespace lab_4
 			console = new Output();
 			console.Show();
 
-			//polygons = Polygon.ReadPolygons("polygons.txt");
+			polygons = Polygon.ReadPolygons("../../../poly.txt");
 		}
 		void Draw_Random_Lines(int count_of_rand_point)
 		{
@@ -102,7 +102,7 @@ namespace lab_4
         {
 			foreach (var poly in polygons)
 			{
-				var map = CG.FillPolygon(poly, (draw_panel.Width, draw_panel.Height));
+				var map = CG.FillPolygon(poly, (draw_panel.Width, draw_panel.Height), console, g);
 
 				g.DrawImage(map, 0, 0);
 			}
