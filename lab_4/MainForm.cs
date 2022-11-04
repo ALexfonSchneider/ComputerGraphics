@@ -77,7 +77,7 @@ namespace lab_4
 				int y_min = (int)y_min_numericUpDown.Value;
 				int y_max = (int)y_max_numericUpDown.Value;
 
-				map = CG.middle_point_clip(p1, p2, x_min, x_max, y_min, y_max, panel_size);
+				map = CG.PolyClip(p1, p2, polygons[0], panel_size);
 
 				if (map == null) return;
 			}

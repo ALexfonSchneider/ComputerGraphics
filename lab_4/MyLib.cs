@@ -122,8 +122,8 @@ namespace lab_4
 				}
 				else
 				{
-					int x = Convert.ToInt32(subs[0]);
-					int y = -Convert.ToInt32(subs[1]);
+					int x = (int)Convert.ToDouble(subs[0]);
+					int y = -(int)Convert.ToDouble(subs[1]);
 
 					points.Add(new Point(x, y));
 				}
@@ -156,6 +156,18 @@ namespace lab_4
 		}
 	}
 
+//	<5>
+//<39 348>
+//<68 300>
+//<277 148>
+//<350 298>
+//<231 314>
+//<5>
+//<0 0>
+//<0 50>
+//<200 200>
+//<50 0>
+
 	static class CG
 	{
 		public static Point FromPixelDegreeToPoint(Point p, (int w, int h) panel_size)
@@ -167,8 +179,8 @@ namespace lab_4
 		public static List<Point> GetPoint(Point point1_d, Point point2_d, (int w, int h) panel_size)
 		{
 			Point center_coords = new Point(panel_size.w / 2, panel_size.h / 2);
-			Point point1 = new Point(center_coords.x + point1_d.x - 1, center_coords.y + point1_d.y - 1);
-			Point point2 = new Point(center_coords.x + point2_d.x - 1, center_coords.y + point2_d.y - 1);
+			Point point1 = new Point(center_coords.x + point1_d.x, center_coords.y + point1_d.y);
+			Point point2 = new Point(center_coords.x + point2_d.x, center_coords.y + point2_d.y);
 
 			int difference_x = point2.x - point1.x;
 			int difference_y = point2.y - point1.y;
@@ -176,8 +188,8 @@ namespace lab_4
 			int directionY = (difference_y) > 0 ? 1 : -1;
 			int directionX = (difference_x) > 0 ? 1 : -1;
 
-			int LengthX = Math.Abs(difference_x);
-			int LengthY = Math.Abs(difference_y);
+			double LengthX = Math.Abs(difference_x);
+			double LengthY = Math.Abs(difference_y);
 
 			List<Point> points = new List<Point>();
 
@@ -187,7 +199,7 @@ namespace lab_4
 
 			if (LengthX > LengthY)
 			{
-				double t = (double)LengthY / LengthX;
+				double t = LengthY / LengthX;
 
 				for (; LengthX >= 0; LengthX--)
 				{
@@ -205,7 +217,7 @@ namespace lab_4
 			}
 			else
 			{
-				double t = (double)LengthX / LengthY;
+				double t = LengthX / LengthY;
 
 				for (; LengthY >= 0; LengthY--)
 				{
@@ -237,59 +249,93 @@ namespace lab_4
 
 			return bitmap;
 		}
-		public static Bitmap FillPolygon(Polygon polygon, (int w, int h) panel_size, Output console=null, Graphics g=null)
+		public static Bitmap FillPolygon(Polygon polygon, (int w, int h) panel_size, Output console = null, Graphics g = null)
 		{
 			Bitmap map = new Bitmap(panel_size.w, panel_size.h);
 
 			List<Point> points = new List<Point>();
 
-			foreach(var edge in polygon.edges)
+			foreach (var edge in polygon.edges)
 			{
 				var edge_points = GetPoint(edge.A, edge.B, panel_size);
-
-				edge_points.RemoveAt(edge_points.Count - 1);
-
-				if(edge_points.Count <= 2) continue;
 
 				var QUERY_sort_by_x = from point in edge_points
 									  group point by point.y;
 
 				var edge_points_grooped_by_y = QUERY_sort_by_x.ToList();
-				
-				foreach(var groope in edge_points_grooped_by_y)
-				{
-					var groope_list = groope.ToList();
 
-					for(int i = 0; i < groope_list.Count - 1;i++)
-					{
-						edge_points.Remove(groope_list[i]);
+                foreach (var groope in edge_points_grooped_by_y)
+                {
+                    var groope_list = groope.ToList();
 
-						if(groope.Key == 101)
-						{
-							var a = 1;
-						}
-					}
-				}
+                    for (int i = 0; i < groope_list.Count - 1; i++)
+                    {
+                        edge_points.Remove(groope_list[i]);
+                    }
+                }
 
-				points.AddRange(edge_points);
+                points.AddRange(edge_points);
 			}
 
 			var QUERY_groop_by_y = from point in points
 								   orderby point.x
 								   group point by point.y;
 
-			foreach(var groop_y in QUERY_groop_by_y)
+			//int max = 0, min = 0;
+			//min = points[0].y;
+			//int count = 0;
+
+			//foreach(var p1 in points)
+   //         {
+			//	if (p1.y > max) max = p1.y;
+			//	if (p1.y < min) min = p1.y;
+   //         }
+
+			//for(int i = min;i < max;i++)
+   //         {
+			//	var q = from p in points
+			//			where p.y == i
+			//			select p;
+
+			//	var t1 = q.ToList();
+
+			//	if(t1.Count > 0) 
+   //             {
+			//		count++;
+
+			//		console.append_text(i.ToString());
+   //             }
+   //         }
+
+			//var t = QUERY_groop_by_y.ToList().Count;
+
+			//if (count != t)
+			//{
+			//	throw new Exception();
+			//}
+
+			foreach (var groop_y in QUERY_groop_by_y)
 			{
 				var line_y = groop_y.ToList();
-				for(int i = 0; i < line_y.Count - 1;i += 2)
+
+				var filter = from point1 in line_y
+                             from point2 in line_y
+                             where point1.x != point2.x
+                             select point1;
+
+                line_y = filter.ToList();
+
+				//if
+
+                for (int i = 0; i < line_y.Count - 1; i += 2)
 				{
 					var point1 = line_y[i];
-						var point2 = line_y[i+1];
+					var point2 = line_y[i + 1];
 
-						for(int x = point1.x;x < point2.x;x++)
-						{
-							map.SetPixel(x, point1.y, Color.Red);
-						}
+					for (int x = point1.x; x < point2.x; x++)
+					{
+						map.SetPixel(x, point1.y, Color.Red);
+					}
 				}
 			}
 
