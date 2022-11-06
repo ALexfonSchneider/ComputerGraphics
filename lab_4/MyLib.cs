@@ -8,7 +8,7 @@ namespace lab_4
 {
 	public delegate float Function(float arg);
 
-	class Pixel
+	public class Pixel
 	{
 		public int x { get; set; }
 		public int y { get; set; }
@@ -189,14 +189,16 @@ namespace lab_4
 				return target;
             }
 
-			if (target.A.x < interseption_point.x)
+			// проблема тут. не удается определить порядок точек
+
+			if (target.A.x < interseption_point.x && target.B.x > interseption_point.x)
             {
 				cuted_line = new Line(target.A, interseption_point);
             }
 			else
             {
 				cuted_line = new Line(interseption_point, target.B);
-            }
+			}
 
 			return cuted_line;
         }

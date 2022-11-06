@@ -105,6 +105,9 @@ namespace lab_4
 			int X2 = (int)(X2_numericUpDown.Value);
 			int Y2 = (int)(Y2_numericUpDown.Value);
 
+			X1 = Y1 = -100;
+			X2 = Y2 = 100;
+
 			var p1 = new Pixel(X1, -Y1);
 			var p2 = new Pixel(X2, -Y2);
 
