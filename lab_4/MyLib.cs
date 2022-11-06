@@ -8,23 +8,23 @@ namespace lab_4
 {
 	public delegate float Function(float arg);
 
-	class Point
+	class Pixel
 	{
 		public int x { get; set; }
 		public int y { get; set; }
 
-		public Point(int x, int y)
+		public Pixel(int x, int y)
 		{
 			this.x = x;
 			this.y = y;
 		}
 	}
-	class Edge
+	class Line
 	{
 		public int number { get; private set; }
 
-		public Point A;
-		public Point B;
+		public Pixel A;
+		public Pixel B;
 
 		public Function fx;
 		public Function fy;
@@ -33,7 +33,7 @@ namespace lab_4
 		public float lengthY { get; }
 		public float tan { get; }
 
-		public Edge(Point A, Point B, int number = -1)
+		public Line(Pixel A, Pixel B, int number = -1)
 		{
 			this.A = A;
 			this.B = B;
@@ -55,16 +55,24 @@ namespace lab_4
 			this.number = number;
 		}
 
-		public Point intersection_point(Edge p2)
+		public Pixel intersection_point(Line p2)
 		{
 			var x = ((this.A.y - this.tan * this.A.x) - (p2.A.y - p2.tan * p2.A.x)) / (p2.tan - this.tan);
 
 			var y = this.fx(x);
 
-			return new Point((int)x, (int)y);
+			(int y1, int y2)= (A.y < B.y) ? (A.y, B.y) : (B.y, A.y);
+
+			// (2) проверяет есть ли пересечение между линиями используя то, что при пересичении точка пересечения между концами отрезка
+			if((y >= y1 && y <= y2) && ((p2.A.y < y && p2.B.y > y) || (p2.A.y > y && p2.B.y < y)))
+				return new Pixel((int)x, (int)y);
+			else
+            {
+				return null;
+            }
 		}
 
-		public bool is_point_below(Point p1)
+		public bool is_point_below(Pixel p1)
 		{
 			var x = (int)fy(p1.y);
 			var y = (int)fx(p1.x);
@@ -75,25 +83,25 @@ namespace lab_4
 	}
 	class Polygon
 	{
-		public List<Point> points;
-		public List<Edge> edges;
-		public Polygon(List<Point> points)
+		public List<Pixel> points;
+		public List<Line> edges;
+		public Polygon(List<Pixel> points)
 		{
 			int edge_index = 0;
-			this.edges = new List<Edge>();
-			this.points = new List<Point>();
+			this.edges = new List<Line>();
+			this.points = new List<Pixel>();
 
-			points.ForEach(p => this.points.Add(new Point(p.x, p.y)));
+			points.ForEach(p => this.points.Add(new Pixel(p.x, p.y)));
 
 			for (int i = 0; i < this.points.Count; i++)
 			{
 				if (i != this.points.Count - 1)
 				{
-					edges.Add(new Edge(this.points[i], this.points[i + 1], edge_index++));
+					edges.Add(new Line(this.points[i], this.points[i + 1], edge_index++));
 				}
 				else
 				{
-					edges.Add(new Edge(this.points[i], this.points[0], edge_index++));
+					edges.Add(new Line(this.points[i], this.points[0], edge_index++));
 				}
 			}
 		}
@@ -104,7 +112,7 @@ namespace lab_4
 
 			string[] content = File.ReadAllLines(filename);
 
-			List<Point> points = null;
+			List<Pixel> points = null;
 
 			for (int i = 0; i < content.Length; i++)
 			{
@@ -118,14 +126,14 @@ namespace lab_4
 					{
 						polygons.Add(new Polygon(points));
 					}
-					points = new List<Point>();
+					points = new List<Pixel>();
 				}
 				else
 				{
 					int x = (int)Convert.ToDouble(subs[0]);
 					int y = -(int)Convert.ToDouble(subs[1]);
 
-					points.Add(new Point(x, y));
+					points.Add(new Pixel(x, y));
 				}
 			}
 
@@ -136,7 +144,7 @@ namespace lab_4
 
 		public Bitmap GetBounds((int w, int h) panel_size)
 		{
-			List<Point> bounds = new List<Point>();
+			List<Pixel> bounds = new List<Pixel>();
 
 			foreach(var edge in this.edges)
 			{
@@ -170,17 +178,39 @@ namespace lab_4
 
 	static class CG
 	{
-		public static Point FromPixelDegreeToPoint(Point p, (int w, int h) panel_size)
+		public static Line CutLineByLine(Line target, Line cated_by)
+        {
+			var interseption_point = cated_by.intersection_point(target);
+
+			Line cuted_line = null;
+
+			if(interseption_point == null)
+            {
+				return target;
+            }
+
+			if (target.A.x < interseption_point.x)
+            {
+				cuted_line = new Line(target.A, interseption_point);
+            }
+			else
+            {
+				cuted_line = new Line(interseption_point, target.B);
+            }
+
+			return cuted_line;
+        }
+		public static Pixel FromPixelDegreeToPoint(Pixel p, (int w, int h) panel_size)
 		{
-			Point center_coords = new Point(panel_size.w / 2, panel_size.h / 2);
-			Point point = new Point(p.x + 1 + center_coords.x, p.y + 1 - center_coords.y);
+			Pixel center_coords = new Pixel(panel_size.w / 2, panel_size.h / 2);
+			Pixel point = new Pixel(p.x + 1 + center_coords.x, p.y + 1 - center_coords.y);
 			return point;
 		}
-		public static List<Point> GetPoint(Point point1_d, Point point2_d, (int w, int h) panel_size)
+		public static List<Pixel> GetPoint(Pixel point1_d, Pixel point2_d, (int w, int h) panel_size)
 		{
-			Point center_coords = new Point(panel_size.w / 2, panel_size.h / 2);
-			Point point1 = new Point(center_coords.x + point1_d.x, center_coords.y + point1_d.y);
-			Point point2 = new Point(center_coords.x + point2_d.x, center_coords.y + point2_d.y);
+			Pixel center_coords = new Pixel(panel_size.w / 2, panel_size.h / 2);
+			Pixel point1 = new Pixel(center_coords.x + point1_d.x, center_coords.y + point1_d.y);
+			Pixel point2 = new Pixel(center_coords.x + point2_d.x, center_coords.y + point2_d.y);
 
 			int difference_x = point2.x - point1.x;
 			int difference_y = point2.y - point1.y;
@@ -191,7 +221,7 @@ namespace lab_4
 			double LengthX = Math.Abs(difference_x);
 			double LengthY = Math.Abs(difference_y);
 
-			List<Point> points = new List<Point>();
+			List<Pixel> points = new List<Pixel>();
 
 			int x = point1.x;
 			int y = point1.y;
@@ -209,7 +239,7 @@ namespace lab_4
 						err -= 1;
 					}
 
-					points.Add(new Point(x, y));
+					points.Add(new Pixel(x, y));
 
 					x += directionX;
 					err += t;
@@ -227,7 +257,7 @@ namespace lab_4
 						err -= 1;
 					}
 
-					points.Add(new Point(x, y));
+					points.Add(new Pixel(x, y));
 
 					y += directionY;
 					err += t;
@@ -236,7 +266,14 @@ namespace lab_4
 
 			return points;
 		}
-		public static Bitmap Brethenhem_algoritm(Point point1_d, Point point2_d, (int w, int h) panel_size)
+		/// <summary>
+		/// y инверсируем!!!!
+		/// </summary>
+		/// <param name="point1_d"></param>
+		/// <param name="point2_d"></param>
+		/// <param name="panel_size"></param>
+		/// <returns></returns>
+		public static Bitmap Brethenhem_algoritm(Pixel point1_d, Pixel point2_d, (int w, int h) panel_size)
 		{
 			var points = GetPoint(point1_d, point2_d, panel_size);
 
@@ -253,7 +290,7 @@ namespace lab_4
 		{
 			Bitmap map = new Bitmap(panel_size.w, panel_size.h);
 
-			List<Point> points = new List<Point>();
+			List<Pixel> points = new List<Pixel>();
 
 			foreach (var edge in polygon.edges)
 			{
@@ -341,71 +378,58 @@ namespace lab_4
 
 			return map;
 		}
-		public static void Swap<T>(ref T obj1, ref T obj2) where T : class
+		public static bool any_in_bounds(Pixel p1, Pixel p2, int x_min, int x_max, int y_min, int y_max)
 		{
-			var temp = obj1;
-			obj1 = obj2;
-			obj2 = temp;
-		}
-
-		public static bool any_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
-		{
-			if (p1.y <= y_min && p2.y <= y_min ||
-			   p1.y >= y_max && p2.y >= y_max ||
-			   p1.x <= x_min && p2.x <= x_min ||
-			   p1.x >= x_max && p2.x >= x_max) return false;
+			if((p1.x < x_min && p2.x < x_min) || (p1.x > x_max && p2.x > x_max))
+            {
+				return false;
+            }
+			if((-p1.y < -y_min && -p2.y < -y_min) || (-p1.y > -y_max && -p2.y > -y_max))
+            {
+				return false;
+            }
 
 			return true;
 		}
-
-		public static bool all_in_bounds(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max)
+		public static bool all_in_bounds(Pixel p1, Pixel p2, int x_min, int x_max, int y_min, int y_max)
 		{
-			if((p1.y >= y_min && p1.y <= y_max && p1.x >= x_min && p1.x <= x_max) && (p2.y >= y_min && p2.y <= y_max && p2.x >= x_min && p2.x <= x_max))
+			if((-p1.y >= -y_min && -p1.y <= -y_max && p1.x >= x_min && p1.x <= x_max) &&
+				(-p2.y >= -y_min && -p2.y <= -y_max && p2.x >= x_min && p2.x <= x_max))
 			{
 				return true;
 			}
 			return false;
 		}
-
-		public static Bitmap PolyClip(Point p1, Point p2, Polygon bounds, (int w, int h) panel_size)
+		public static Bitmap PolyClip(Pixel p1, Pixel p2, Polygon bounds, (int w, int h) panel_size)
 		{
-			Edge line = new Edge(p1, p2);
+			Line line = new Line(p1, p2);
 
 			foreach(var edge in bounds.edges)
 			{
-				var interseption_point = line.intersection_point(edge);
-
-				if(edge.is_point_below(interseption_point))
-				{
-					p1.x = interseption_point.x;
-					p1.y = interseption_point.y;
-				}
+				line = CG.CutLineByLine(line, edge);
 			}
 
-			return Brethenhem_algoritm(p1, p2, panel_size);
+			return Brethenhem_algoritm(line.A, line.B, panel_size);
 		}
-
-		public static Bitmap? middle_point_clip(Point p1, Point p2, int x_min, int x_max, int y_min, int y_max, (int w, int h) panel_size)
+		public static void middle_point_clip(Graphics g, Pixel p1, Pixel p2, int x_min, int x_max, int y_min, int y_max, (int w, int h) panel_size)
 		{
 			int lengthX = Math.Abs(p2.x - p1.x);
 			int lengthY = Math.Abs(p2.y - p1.y);
 
-			if (lengthX < 0 || lengthY < 0) return null;
-			if (!any_in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return null;
-			if(all_in_bounds(p1 , p2 , x_min, x_max, y_min, y_max))
+			if (lengthX <= 1 || lengthY <= 1) return;
+			if (!any_in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return;
+			if(all_in_bounds(p1, p2 ,x_min, x_max, y_min, y_max))
 			{
-				return Brethenhem_algoritm(p1, p2, panel_size);
+				var map = Brethenhem_algoritm(p1, p2, panel_size);
+				g.DrawImage(map, 0, 0);
+				return;
 			}
 
-			var bitmap = middle_point_clip(p1, new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), 
+			middle_point_clip(g, p1, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), 
 				x_min, x_max, y_min, y_max, panel_size);
 
-			if (bitmap != null) return bitmap;
-
-			bitmap = middle_point_clip(new Point((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), p2, 
+			middle_point_clip(g, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), p2, 
 				x_min, x_max, y_min, y_max,  panel_size);
-
-			return bitmap;
 		}
 	}
 }

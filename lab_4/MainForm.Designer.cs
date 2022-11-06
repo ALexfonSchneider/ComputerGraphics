@@ -34,8 +34,10 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.bounds_poly = new System.Windows.Forms.RadioButton();
+            this.bounds_middle = new System.Windows.Forms.RadioButton();
+            this.boudns_off = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
-            this.bouds_checkBox = new System.Windows.Forms.CheckBox();
             this.draw_poly_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
             this.draw_button = new System.Windows.Forms.Button();
@@ -112,8 +114,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.bounds_poly);
+            this.panel1.Controls.Add(this.bounds_middle);
+            this.panel1.Controls.Add(this.boudns_off);
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.bouds_checkBox);
             this.panel1.Controls.Add(this.draw_poly_button);
             this.panel1.Controls.Add(this.clear_button);
             this.panel1.Controls.Add(this.draw_button);
@@ -135,6 +139,40 @@
             this.panel1.Size = new System.Drawing.Size(1154, 133);
             this.panel1.TabIndex = 0;
             // 
+            // bounds_poly
+            // 
+            this.bounds_poly.AutoSize = true;
+            this.bounds_poly.Location = new System.Drawing.Point(590, 103);
+            this.bounds_poly.Name = "bounds_poly";
+            this.bounds_poly.Size = new System.Drawing.Size(112, 24);
+            this.bounds_poly.TabIndex = 0;
+            this.bounds_poly.TabStop = true;
+            this.bounds_poly.Text = "bounds poly";
+            this.bounds_poly.UseVisualStyleBackColor = true;
+            // 
+            // bounds_middle
+            // 
+            this.bounds_middle.AutoSize = true;
+            this.bounds_middle.Location = new System.Drawing.Point(445, 103);
+            this.bounds_middle.Name = "bounds_middle";
+            this.bounds_middle.Size = new System.Drawing.Size(130, 24);
+            this.bounds_middle.TabIndex = 0;
+            this.bounds_middle.TabStop = true;
+            this.bounds_middle.Text = "bounds middle";
+            this.bounds_middle.UseVisualStyleBackColor = true;
+            this.bounds_middle.CheckedChanged += new System.EventHandler(this.bounds_middle_CheckedChanged);
+            // 
+            // boudns_off
+            // 
+            this.boudns_off.AutoSize = true;
+            this.boudns_off.Location = new System.Drawing.Point(331, 103);
+            this.boudns_off.Name = "boudns_off";
+            this.boudns_off.Size = new System.Drawing.Size(100, 24);
+            this.boudns_off.TabIndex = 0;
+            this.boudns_off.TabStop = true;
+            this.boudns_off.Text = "no bounds";
+            this.boudns_off.UseVisualStyleBackColor = true;
+            // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(1050, 48);
@@ -145,20 +183,9 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.random_button_Click);
             // 
-            // bouds_checkBox
-            // 
-            this.bouds_checkBox.AutoSize = true;
-            this.bouds_checkBox.Location = new System.Drawing.Point(631, 51);
-            this.bouds_checkBox.Name = "bouds_checkBox";
-            this.bouds_checkBox.Size = new System.Drawing.Size(106, 24);
-            this.bouds_checkBox.TabIndex = 3;
-            this.bouds_checkBox.Text = "use bounds";
-            this.bouds_checkBox.UseVisualStyleBackColor = true;
-            this.bouds_checkBox.CheckedChanged += new System.EventHandler(this.cbouds_heckBox_CheckedChanged);
-            // 
             // draw_poly_button
             // 
-            this.draw_poly_button.Location = new System.Drawing.Point(531, 51);
+            this.draw_poly_button.Location = new System.Drawing.Point(581, 48);
             this.draw_poly_button.Name = "draw_poly_button";
             this.draw_poly_button.Size = new System.Drawing.Size(94, 29);
             this.draw_poly_button.TabIndex = 2;
@@ -168,7 +195,7 @@
             // 
             // clear_button
             // 
-            this.clear_button.Location = new System.Drawing.Point(431, 51);
+            this.clear_button.Location = new System.Drawing.Point(481, 48);
             this.clear_button.Name = "clear_button";
             this.clear_button.Size = new System.Drawing.Size(94, 29);
             this.clear_button.TabIndex = 2;
@@ -178,7 +205,7 @@
             // 
             // draw_button
             // 
-            this.draw_button.Location = new System.Drawing.Point(331, 51);
+            this.draw_button.Location = new System.Drawing.Point(381, 48);
             this.draw_button.Name = "draw_button";
             this.draw_button.Size = new System.Drawing.Size(94, 29);
             this.draw_button.TabIndex = 2;
@@ -440,12 +467,14 @@
         private Button random_button;
         private Button draw_poly_button;
         private Button button1;
-        private CheckBox bouds_checkBox;
         private Label label4;
         private Label label3;
         private NumericUpDown y_max_numericUpDown;
         private NumericUpDown x_max_numericUpDown;
         private NumericUpDown y_min_numericUpDown;
         private NumericUpDown x_min_numericUpDown;
+        private RadioButton bounds_poly;
+        private RadioButton bounds_middle;
+        private RadioButton boudns_off;
     }
 }

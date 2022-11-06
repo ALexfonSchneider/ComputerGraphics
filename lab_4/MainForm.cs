@@ -34,7 +34,7 @@ namespace lab_4
 
 			polygons = Polygon.ReadPolygons("../../../poly.txt");
 		}
-		void Draw_Random_Lines(int count_of_rand_point)
+		public void Draw_Random_Lines(int count_of_rand_point)
 		{
 			Random rand = new Random();
 
@@ -49,12 +49,54 @@ namespace lab_4
 				var rand_value_x2 = rand.Next(-bound_x, bound_x);
 				var rand_value_y2 = rand.Next(-bound_y, bound_y);
 
-				var map = CG.Brethenhem_algoritm(new Point(rand_value_x1, -rand_value_y1),
-					new Point(rand_value_x2, -rand_value_y2), (grafic_width, grafic_height));
-
-				g.DrawImage(map, 0, 0);
+				DrawLine(new Pixel(rand_value_x1, -rand_value_y1),
+					new Pixel(rand_value_x2, -rand_value_y2), (grafic_width, grafic_height));
 			}
 		}
+
+		public void DrawLine(Pixel p1, Pixel p2, (int w, int h) panel_size)
+        {
+			if (boudns_off.Checked)
+			{
+				var map = CG.Brethenhem_algoritm(p1, p2, panel_size);
+				g.DrawImage(map, 0, 0);
+			}
+			else
+			{
+				Polygon poly = null;
+
+				if (bounds_middle.Checked)
+				{
+					int x_min = (int)x_min_numericUpDown.Value;
+					int x_max = (int)x_max_numericUpDown.Value;
+					int y_min = -(int)y_min_numericUpDown.Value;
+					int y_max = -(int)y_max_numericUpDown.Value;
+
+					poly = new Polygon(new List<Pixel>() { new Pixel(x_min, y_min),
+					new Pixel(x_min, y_max), new Pixel(x_max, y_max), new Pixel(x_max, y_min) });
+
+					CG.middle_point_clip(g, p1, p2, x_min, x_max, y_min, y_max, panel_size);
+				}
+				else if (bounds_poly.Checked) // не рабит
+				{
+					try
+					{
+						poly = polygons[0];
+
+						var map = CG.PolyClip(p1, p2, poly, panel_size);
+
+						g.DrawImage(map, 0, 0);
+					}
+					catch { }
+				}
+				if (poly == null) return;
+
+				var map_boudns = poly.GetBounds(panel_size);
+				g.DrawImage(map_boudns, 0, 0);
+			}
+			
+		}
+
 		private void draw_button_Click(object sender, EventArgs e)
 		{
 			int X1 = (int)(X1_numericUpDown.Value);
@@ -63,30 +105,12 @@ namespace lab_4
 			int X2 = (int)(X2_numericUpDown.Value);
 			int Y2 = (int)(Y2_numericUpDown.Value);
 
-			var p1 = new Point(X1, -Y1);
-			var p2 = new Point(X2, -Y2);
+			var p1 = new Pixel(X1, -Y1);
+			var p2 = new Pixel(X2, -Y2);
 
 			var panel_size = (grafic_width, grafic_height);
 
-			Bitmap map = null;
-
-			if (bouds_checkBox.Checked)
-			{
-				int x_min = (int)x_min_numericUpDown.Value;
-				int x_max = (int)x_max_numericUpDown.Value;
-				int y_min = (int)y_min_numericUpDown.Value;
-				int y_max = (int)y_max_numericUpDown.Value;
-
-				map = CG.PolyClip(p1, p2, polygons[0], panel_size);
-
-				if (map == null) return;
-			}
-			else
-			{
-				map = CG.Brethenhem_algoritm(p1, p2, panel_size);
-			}
-
-			g.DrawImage(map, 0, 0);
+			DrawLine(p1, p2, panel_size);
 		}
 		private void random_button_Click(object sender, EventArgs e)
 		{
@@ -108,6 +132,11 @@ namespace lab_4
 			}
 		}
         private void cbouds_heckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void bounds_middle_CheckedChanged(object sender, EventArgs e)
         {
 
         }
