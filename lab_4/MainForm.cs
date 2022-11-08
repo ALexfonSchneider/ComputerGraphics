@@ -77,7 +77,7 @@ namespace lab_4
 
 					CG.middle_point_clip(g, p1, p2, x_min, x_max, y_min, y_max, panel_size);
 				}
-				else if (bounds_poly.Checked) // не рабит
+				else if (bounds_poly.Checked)
 				{
 					try
 					{
@@ -105,8 +105,8 @@ namespace lab_4
 			int X2 = (int)(X2_numericUpDown.Value);
 			int Y2 = (int)(Y2_numericUpDown.Value);
 
-			X1 = Y1 = -100;
-			X2 = Y2 = 100;
+			//X1 = Y1 = -100;
+			//X2 = Y2 = 100;
 
 			var p1 = new Pixel(X1, -Y1);
 			var p2 = new Pixel(X2, -Y2);
@@ -134,14 +134,20 @@ namespace lab_4
 				g.DrawImage(map, 0, 0);
 			}
 		}
-        private void cbouds_heckBox_CheckedChanged(object sender, EventArgs e)
+
+        private void bounds_button_Click(object sender, EventArgs e)
         {
+			int x_min = (int)x_min_numericUpDown.Value;
+			int x_max = (int)x_max_numericUpDown.Value;
+			int y_min = -(int)y_min_numericUpDown.Value;
+			int y_max = -(int)y_max_numericUpDown.Value;
 
-        }
+			var poly = new Polygon(new List<Pixel>() { new Pixel(x_min, y_min),
+					new Pixel(x_min, y_max), new Pixel(x_max, y_max), new Pixel(x_max, y_min) });
 
-        private void bounds_middle_CheckedChanged(object sender, EventArgs e)
-        {
+			var bounds = poly.GetBounds((grafic_width, grafic_height));
 
+			g.DrawImage(bounds, 0, 0);
         }
     }
 }

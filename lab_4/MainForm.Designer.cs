@@ -37,7 +37,7 @@
             this.bounds_poly = new System.Windows.Forms.RadioButton();
             this.bounds_middle = new System.Windows.Forms.RadioButton();
             this.boudns_off = new System.Windows.Forms.RadioButton();
-            this.button1 = new System.Windows.Forms.Button();
+            this.bounds_button = new System.Windows.Forms.Button();
             this.draw_poly_button = new System.Windows.Forms.Button();
             this.clear_button = new System.Windows.Forms.Button();
             this.draw_button = new System.Windows.Forms.Button();
@@ -117,7 +117,7 @@
             this.panel1.Controls.Add(this.bounds_poly);
             this.panel1.Controls.Add(this.bounds_middle);
             this.panel1.Controls.Add(this.boudns_off);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.bounds_button);
             this.panel1.Controls.Add(this.draw_poly_button);
             this.panel1.Controls.Add(this.clear_button);
             this.panel1.Controls.Add(this.draw_button);
@@ -160,7 +160,6 @@
             this.bounds_middle.TabStop = true;
             this.bounds_middle.Text = "bounds middle";
             this.bounds_middle.UseVisualStyleBackColor = true;
-            this.bounds_middle.CheckedChanged += new System.EventHandler(this.bounds_middle_CheckedChanged);
             // 
             // boudns_off
             // 
@@ -173,15 +172,15 @@
             this.boudns_off.Text = "no bounds";
             this.boudns_off.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // bounds_button
             // 
-            this.button1.Location = new System.Drawing.Point(1050, 48);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 29);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "RandPoints";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.random_button_Click);
+            this.bounds_button.Location = new System.Drawing.Point(1050, 48);
+            this.bounds_button.Name = "bounds_button";
+            this.bounds_button.Size = new System.Drawing.Size(94, 29);
+            this.bounds_button.TabIndex = 1;
+            this.bounds_button.Text = "bounds";
+            this.bounds_button.UseVisualStyleBackColor = true;
+            this.bounds_button.Click += new System.EventHandler(this.bounds_button_Click);
             // 
             // draw_poly_button
             // 
@@ -408,6 +407,11 @@
             // count_of_rand_points_numericUpDown
             // 
             this.count_of_rand_points_numericUpDown.Location = new System.Drawing.Point(35, 17);
+            this.count_of_rand_points_numericUpDown.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.count_of_rand_points_numericUpDown.Name = "count_of_rand_points_numericUpDown";
             this.count_of_rand_points_numericUpDown.Size = new System.Drawing.Size(150, 27);
             this.count_of_rand_points_numericUpDown.TabIndex = 0;
@@ -466,7 +470,6 @@
         private NumericUpDown count_of_rand_points_numericUpDown;
         private Button random_button;
         private Button draw_poly_button;
-        private Button button1;
         private Label label4;
         private Label label3;
         private NumericUpDown y_max_numericUpDown;
@@ -476,5 +479,6 @@
         private RadioButton bounds_poly;
         private RadioButton bounds_middle;
         private RadioButton boudns_off;
+        private Button bounds_button;
     }
 }

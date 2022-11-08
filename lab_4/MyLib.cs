@@ -63,13 +63,16 @@ namespace lab_4
 
 			(int y1, int y2)= (A.y < B.y) ? (A.y, B.y) : (B.y, A.y);
 
+			if(y >= y1 && y <= y2) return new Pixel((int)x, (int)y);
+			else return null;
+
 			// (2) проверяет есть ли пересечение между линиями используя то, что при пересичении точка пересечения между концами отрезка
-			if((y >= y1 && y <= y2) && ((p2.A.y < y && p2.B.y > y) || (p2.A.y > y && p2.B.y < y)))
-				return new Pixel((int)x, (int)y);
-			else
-            {
-				return null;
-            }
+			//if((y >= y1 && y <= y2) && ((p2.A.y < y && p2.B.y > y) || (p2.A.y > y && p2.B.y < y)))
+				//return new Pixel((int)x, (int)y);
+			//else
+            //{
+				//return null;
+            //}
 		}
 
 		public bool is_point_below(Pixel p1)
@@ -162,6 +165,87 @@ namespace lab_4
 
 			return map;
 		}
+
+		public List<Line>? CutLine(Line line)
+        {
+			List<Pixel> points = new List<Pixel>();
+			foreach(var edge in edges)
+            {
+				var point = edge.intersection_point(line);
+
+				if(point != null) points.Add(point);
+            }
+
+			if (points.Count == 0) return null;
+
+			var p1 = line.A;
+			var p2 = line.B;
+
+			(p1, p2) = (p1.x < p2.x) ? (p1, p2) : (p2, p1);
+
+			List<Pixel> points_in_line_x_zone = new List<Pixel>();
+			List<Pixel> points_not_in_line_x_zone = new List<Pixel>();
+
+			foreach (var point in points)
+            {
+				if (point.x <= p2.x && point.x >= p1.x)
+                {
+					points_in_line_x_zone.Add(point);
+                }
+				else
+                {
+					points_not_in_line_x_zone.Add(point);
+                }
+            }
+
+			List<Line> lines = new List<Line>();
+
+			if(points.Count % 2 == 1 || points.Count > 4)
+            {
+				Console.WriteLine(1);
+            }
+
+			var query_sort_by_x = from point in points_in_line_x_zone orderby point.x select point;
+
+			points_in_line_x_zone = query_sort_by_x.ToList();
+
+			for (int i = 0; i < points_in_line_x_zone.Count; i++)
+			{
+				Line line1;
+
+				if (points_in_line_x_zone.Count - i > 1)
+				{
+					var p3 = points_in_line_x_zone[i];
+					var p4 = points_in_line_x_zone[i + 1];
+
+					(p3, p4) = (p3.x < p4.x) ? (p3, p4) : (p4, p3);
+
+					line1 = new Line(p3, p4);
+
+					lines.Add(line1);
+
+					i++;
+					continue;
+				}
+				else if (points_in_line_x_zone.Count - i == 1)
+				{
+					var p_out = points_not_in_line_x_zone[0];
+
+					var p3 = points_in_line_x_zone[i];
+
+					if (p_out.x < p1.x)
+					{
+						line1 = new Line(p1, p3);
+					}
+					else
+					{
+						line1 = new Line(p3, p2);
+					}
+				}
+			}
+
+			return lines;
+        } 
 	}
 
 //	<5>
@@ -178,30 +262,6 @@ namespace lab_4
 
 	static class CG
 	{
-		public static Line CutLineByLine(Line target, Line cated_by)
-        {
-			var interseption_point = cated_by.intersection_point(target);
-
-			Line cuted_line = null;
-
-			if(interseption_point == null)
-            {
-				return target;
-            }
-
-			// проблема тут. не удается определить порядок точек
-
-			if (target.A.x < interseption_point.x && target.B.x > interseption_point.x)
-            {
-				cuted_line = new Line(target.A, interseption_point);
-            }
-			else
-            {
-				cuted_line = new Line(interseption_point, target.B);
-			}
-
-			return cuted_line;
-        }
 		public static Pixel FromPixelDegreeToPoint(Pixel p, (int w, int h) panel_size)
 		{
 			Pixel center_coords = new Pixel(panel_size.w / 2, panel_size.h / 2);
@@ -288,6 +348,19 @@ namespace lab_4
 
 			return bitmap;
 		}
+
+		public static Bitmap Brethenhem_algoritm(List<Pixel> points, (int w, int h) panel_size)
+		{
+			Bitmap bitmap = new Bitmap(panel_size.w, panel_size.h);
+
+			foreach (var p in points)
+			{
+				bitmap.SetPixel(p.x, p.y, Color.Black);
+			}
+
+			return bitmap;
+		}
+
 		public static Bitmap FillPolygon(Polygon polygon, (int w, int h) panel_size, Output console = null, Graphics g = null)
 		{
 			Bitmap map = new Bitmap(panel_size.w, panel_size.h);
@@ -402,16 +475,22 @@ namespace lab_4
 			}
 			return false;
 		}
-		public static Bitmap PolyClip(Pixel p1, Pixel p2, Polygon bounds, (int w, int h) panel_size)
+		public static Bitmap? PolyClip(Pixel p1, Pixel p2, Polygon bounds, (int w, int h) panel_size)
 		{
-			Line line = new Line(p1, p2);
+			var lines = bounds.CutLine(new Line(p1, p2));
 
-			foreach(var edge in bounds.edges)
-			{
-				line = CG.CutLineByLine(line, edge);
-			}
+			if (lines == null || lines.Count == 0) return null;
 
-			return Brethenhem_algoritm(line.A, line.B, panel_size);
+			Bitmap map = new Bitmap(panel_size.w, panel_size.h);
+
+			List<Pixel> line_pixels = new List<Pixel>();
+
+			foreach(var line in lines)
+            {
+				line_pixels.AddRange(GetPoint(line.A, line.B, panel_size));
+            }
+
+			return Brethenhem_algoritm(line_pixels, panel_size);
 		}
 		public static void middle_point_clip(Graphics g, Pixel p1, Pixel p2, int x_min, int x_max, int y_min, int y_max, (int w, int h) panel_size)
 		{
