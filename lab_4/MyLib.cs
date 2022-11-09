@@ -44,7 +44,7 @@ namespace lab_4
 
 			fx = delegate (float x)
 			{
-				return A.y + tan * x - tan*A.x; // y - tan * x = A.y - tan*A.x
+				return A.y + tan * x - tan*A.x;
 			};
 
 			fy = delegate (float y)
@@ -55,7 +55,7 @@ namespace lab_4
 			this.number = number;
 		}
 
-		public Pixel intersection_point(Line p2)
+		public Pixel? intersection_point(Line p2)
 		{
 			var x = ((this.A.y - this.tan * this.A.x) - (p2.A.y - p2.tan * p2.A.x)) / (p2.tan - this.tan);
 
@@ -65,14 +65,6 @@ namespace lab_4
 
 			if(y >= y1 && y <= y2) return new Pixel((int)x, (int)y);
 			else return null;
-
-			// (2) проверяет есть ли пересечение между линиями используя то, что при пересичении точка пересечения между концами отрезка
-			//if((y >= y1 && y <= y2) && ((p2.A.y < y && p2.B.y > y) || (p2.A.y > y && p2.B.y < y)))
-				//return new Pixel((int)x, (int)y);
-			//else
-            //{
-				//return null;
-            //}
 		}
 
 		public bool is_point_below(Pixel p1)
@@ -115,7 +107,7 @@ namespace lab_4
 
 			string[] content = File.ReadAllLines(filename);
 
-			List<Pixel> points = null;
+			List<Pixel>? points = null;
 
 			for (int i = 0; i < content.Length; i++)
 			{
@@ -134,7 +126,7 @@ namespace lab_4
 				else
 				{
 					int x = (int)Convert.ToDouble(subs[0]);
-					int y = -(int)Convert.ToDouble(subs[1]);
+					int y = (int)Convert.ToDouble(subs[1]);
 
 					points.Add(new Pixel(x, y));
 				}
@@ -198,17 +190,11 @@ namespace lab_4
                 }
             }
 
-			List<Line> lines = new List<Line>();
-
-			if(points.Count % 2 == 1 || points.Count > 4)
-            {
-				Console.WriteLine(1);
-            }
-
 			var query_sort_by_x = from point in points_in_line_x_zone orderby point.x select point;
 
 			points_in_line_x_zone = query_sort_by_x.ToList();
 
+			List<Line> lines = new List<Line>();
 			for (int i = 0; i < points_in_line_x_zone.Count; i++)
 			{
 				Line line1;
@@ -241,25 +227,14 @@ namespace lab_4
 					{
 						line1 = new Line(p3, p2);
 					}
+
+					lines.Add(line1);
 				}
 			}
 
 			return lines;
-        } 
-	}
-
-//	<5>
-//<39 348>
-//<68 300>
-//<277 148>
-//<350 298>
-//<231 314>
-//<5>
-//<0 0>
-//<0 50>
-//<200 200>
-//<50 0>
-
+        }
+    }
 	static class CG
 	{
 		public static Pixel FromPixelDegreeToPoint(Pixel p, (int w, int h) panel_size)
@@ -328,13 +303,6 @@ namespace lab_4
 
 			return points;
 		}
-		/// <summary>
-		/// y инверсируем!!!!
-		/// </summary>
-		/// <param name="point1_d"></param>
-		/// <param name="point2_d"></param>
-		/// <param name="panel_size"></param>
-		/// <returns></returns>
 		public static Bitmap Brethenhem_algoritm(Pixel point1_d, Pixel point2_d, (int w, int h) panel_size)
 		{
 			var points = GetPoint(point1_d, point2_d, panel_size);
@@ -361,7 +329,7 @@ namespace lab_4
 			return bitmap;
 		}
 
-		public static Bitmap FillPolygon(Polygon polygon, (int w, int h) panel_size, Output console = null, Graphics g = null)
+		public static Bitmap FillPolygon(Polygon polygon, (int w, int h) panel_size)
 		{
 			Bitmap map = new Bitmap(panel_size.w, panel_size.h);
 
@@ -393,38 +361,6 @@ namespace lab_4
 								   orderby point.x
 								   group point by point.y;
 
-			//int max = 0, min = 0;
-			//min = points[0].y;
-			//int count = 0;
-
-			//foreach(var p1 in points)
-   //         {
-			//	if (p1.y > max) max = p1.y;
-			//	if (p1.y < min) min = p1.y;
-   //         }
-
-			//for(int i = min;i < max;i++)
-   //         {
-			//	var q = from p in points
-			//			where p.y == i
-			//			select p;
-
-			//	var t1 = q.ToList();
-
-			//	if(t1.Count > 0) 
-   //             {
-			//		count++;
-
-			//		console.append_text(i.ToString());
-   //             }
-   //         }
-
-			//var t = QUERY_groop_by_y.ToList().Count;
-
-			//if (count != t)
-			//{
-			//	throw new Exception();
-			//}
 
 			foreach (var groop_y in QUERY_groop_by_y)
 			{
@@ -436,8 +372,6 @@ namespace lab_4
                              select point1;
 
                 line_y = filter.ToList();
-
-				//if
 
                 for (int i = 0; i < line_y.Count - 1; i += 2)
 				{
@@ -459,7 +393,7 @@ namespace lab_4
             {
 				return false;
             }
-			if((-p1.y < -y_min && -p2.y < -y_min) || (-p1.y > -y_max && -p2.y > -y_max))
+			if((p1.y < y_min && p2.y < y_min) || (p1.y > y_max && p2.y > y_max))
             {
 				return false;
             }
@@ -468,8 +402,8 @@ namespace lab_4
 		}
 		public static bool all_in_bounds(Pixel p1, Pixel p2, int x_min, int x_max, int y_min, int y_max)
 		{
-			if((-p1.y >= -y_min && -p1.y <= -y_max && p1.x >= x_min && p1.x <= x_max) &&
-				(-p2.y >= -y_min && -p2.y <= -y_max && p2.x >= x_min && p2.x <= x_max))
+			if((p1.y >= y_min && p1.y <= y_max && p1.x >= x_min && p1.x <= x_max) &&
+				(p2.y >= y_min && p2.y <= y_max && p2.x >= x_min && p2.x <= x_max))
 			{
 				return true;
 			}
@@ -502,6 +436,7 @@ namespace lab_4
 			if(all_in_bounds(p1, p2 ,x_min, x_max, y_min, y_max))
 			{
 				var map = Brethenhem_algoritm(p1, p2, panel_size);
+				map.RotateFlip(RotateFlipType.RotateNoneFlipY);
 				g.DrawImage(map, 0, 0);
 				return;
 			}
@@ -514,3 +449,28 @@ namespace lab_4
 		}
 	}
 }
+
+//	<5>
+//<39 348>
+//<68 300>
+//<277 148>
+//<350 298>
+//<231 314>
+//<5>
+//<0 0>
+//<0 50>
+//<200 200>
+//<50 0>
+
+
+//<5>
+//<0 80>
+//<25 35>
+//<75 25>
+//<40 -10>
+//<50 -60>
+//<0 -40>
+//<-50 -60>
+//<-40 -10>
+//<-75 25>
+//<-25 35>

@@ -142,7 +142,7 @@
             // bounds_poly
             // 
             this.bounds_poly.AutoSize = true;
-            this.bounds_poly.Location = new System.Drawing.Point(590, 103);
+            this.bounds_poly.Location = new System.Drawing.Point(605, 103);
             this.bounds_poly.Name = "bounds_poly";
             this.bounds_poly.Size = new System.Drawing.Size(112, 24);
             this.bounds_poly.TabIndex = 0;
@@ -153,7 +153,7 @@
             // bounds_middle
             // 
             this.bounds_middle.AutoSize = true;
-            this.bounds_middle.Location = new System.Drawing.Point(445, 103);
+            this.bounds_middle.Location = new System.Drawing.Point(460, 103);
             this.bounds_middle.Name = "bounds_middle";
             this.bounds_middle.Size = new System.Drawing.Size(130, 24);
             this.bounds_middle.TabIndex = 0;
@@ -164,7 +164,7 @@
             // boudns_off
             // 
             this.boudns_off.AutoSize = true;
-            this.boudns_off.Location = new System.Drawing.Point(331, 103);
+            this.boudns_off.Location = new System.Drawing.Point(346, 103);
             this.boudns_off.Name = "boudns_off";
             this.boudns_off.Size = new System.Drawing.Size(100, 24);
             this.boudns_off.TabIndex = 0;
@@ -224,7 +224,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(218, 17);
+            this.label2.Location = new System.Drawing.Point(218, 30);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(17, 20);
             this.label2.TabIndex = 1;
@@ -242,7 +242,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 16);
+            this.label1.Location = new System.Drawing.Point(58, 29);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(18, 20);
             this.label1.TabIndex = 1;
@@ -267,7 +267,7 @@
             // 
             // Y2_numericUpDown
             // 
-            this.Y2_numericUpDown.Location = new System.Drawing.Point(175, 73);
+            this.Y2_numericUpDown.Location = new System.Drawing.Point(175, 86);
             this.Y2_numericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -301,7 +301,7 @@
             // 
             // X2_numericUpDown
             // 
-            this.X2_numericUpDown.Location = new System.Drawing.Point(19, 73);
+            this.X2_numericUpDown.Location = new System.Drawing.Point(19, 86);
             this.X2_numericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -352,7 +352,7 @@
             // 
             // Y1_numericUpDown
             // 
-            this.Y1_numericUpDown.Location = new System.Drawing.Point(175, 40);
+            this.Y1_numericUpDown.Location = new System.Drawing.Point(175, 53);
             this.Y1_numericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -369,7 +369,7 @@
             // 
             // X1_numericUpDown
             // 
-            this.X1_numericUpDown.Location = new System.Drawing.Point(19, 40);
+            this.X1_numericUpDown.Location = new System.Drawing.Point(19, 53);
             this.X1_numericUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -396,7 +396,7 @@
             // 
             // random_button
             // 
-            this.random_button.Location = new System.Drawing.Point(57, 51);
+            this.random_button.Location = new System.Drawing.Point(120, 82);
             this.random_button.Name = "random_button";
             this.random_button.Size = new System.Drawing.Size(94, 29);
             this.random_button.TabIndex = 1;
@@ -406,7 +406,7 @@
             // 
             // count_of_rand_points_numericUpDown
             // 
-            this.count_of_rand_points_numericUpDown.Location = new System.Drawing.Point(35, 17);
+            this.count_of_rand_points_numericUpDown.Location = new System.Drawing.Point(98, 48);
             this.count_of_rand_points_numericUpDown.Maximum = new decimal(new int[] {
             1000000,
             0,

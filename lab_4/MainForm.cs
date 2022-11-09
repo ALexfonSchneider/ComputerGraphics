@@ -14,7 +14,6 @@ namespace lab_4
 	{
 		Graphics g;
 		List<Polygon> polygons;
-
 		Output console;
 
         public int grafic_width { get; private set; }
@@ -49,28 +48,28 @@ namespace lab_4
 				var rand_value_x2 = rand.Next(-bound_x, bound_x);
 				var rand_value_y2 = rand.Next(-bound_y, bound_y);
 
-				DrawLine(new Pixel(rand_value_x1, -rand_value_y1),
-					new Pixel(rand_value_x2, -rand_value_y2), (grafic_width, grafic_height));
+				DrawLine(new Pixel(rand_value_x1, rand_value_y1),
+					new Pixel(rand_value_x2, rand_value_y2), (grafic_width, grafic_height));
 			}
 		}
-
 		public void DrawLine(Pixel p1, Pixel p2, (int w, int h) panel_size)
         {
 			if (boudns_off.Checked)
 			{
 				var map = CG.Brethenhem_algoritm(p1, p2, panel_size);
+				map.RotateFlip(RotateFlipType.RotateNoneFlipY);
 				g.DrawImage(map, 0, 0);
 			}
 			else
 			{
-				Polygon poly = null;
+				Polygon? poly = null;
 
 				if (bounds_middle.Checked)
 				{
 					int x_min = (int)x_min_numericUpDown.Value;
 					int x_max = (int)x_max_numericUpDown.Value;
-					int y_min = -(int)y_min_numericUpDown.Value;
-					int y_max = -(int)y_max_numericUpDown.Value;
+					int y_min = (int)y_min_numericUpDown.Value;
+					int y_max = (int)y_max_numericUpDown.Value;
 
 					poly = new Polygon(new List<Pixel>() { new Pixel(x_min, y_min),
 					new Pixel(x_min, y_max), new Pixel(x_max, y_max), new Pixel(x_max, y_min) });
@@ -79,19 +78,19 @@ namespace lab_4
 				}
 				else if (bounds_poly.Checked)
 				{
-					try
-					{
-						poly = polygons[0];
+					poly = polygons[0];
 
-						var map = CG.PolyClip(p1, p2, poly, panel_size);
+					var map = CG.PolyClip(p1, p2, poly, panel_size);
 
-						g.DrawImage(map, 0, 0);
-					}
-					catch { }
+					if (map == null) return;
+					map.RotateFlip(RotateFlipType.RotateNoneFlipY);
+					g.DrawImage(map, 0, 0);
 				}
-				if (poly == null) return;
 
+
+				if (poly == null) return;
 				var map_boudns = poly.GetBounds(panel_size);
+				map_boudns.RotateFlip(RotateFlipType.RotateNoneFlipY);
 				g.DrawImage(map_boudns, 0, 0);
 			}
 			
@@ -101,19 +100,13 @@ namespace lab_4
 		{
 			int X1 = (int)(X1_numericUpDown.Value);
 			int Y1 = (int)(Y1_numericUpDown.Value);
-
 			int X2 = (int)(X2_numericUpDown.Value);
 			int Y2 = (int)(Y2_numericUpDown.Value);
 
-			//X1 = Y1 = -100;
-			//X2 = Y2 = 100;
+			var p1 = new Pixel(X1, Y1);
+			var p2 = new Pixel(X2, Y2);
 
-			var p1 = new Pixel(X1, -Y1);
-			var p2 = new Pixel(X2, -Y2);
-
-			var panel_size = (grafic_width, grafic_height);
-
-			DrawLine(p1, p2, panel_size);
+			DrawLine(p1, p2, (grafic_width, grafic_height));
 		}
 		private void random_button_Click(object sender, EventArgs e)
 		{
@@ -129,8 +122,8 @@ namespace lab_4
         {
 			foreach (var poly in polygons)
 			{
-				var map = CG.FillPolygon(poly, (draw_panel.Width, draw_panel.Height), console, g);
-
+				var map = CG.FillPolygon(poly, (draw_panel.Width, draw_panel.Height));
+				map.RotateFlip(RotateFlipType.RotateNoneFlipY);
 				g.DrawImage(map, 0, 0);
 			}
 		}
@@ -139,14 +132,14 @@ namespace lab_4
         {
 			int x_min = (int)x_min_numericUpDown.Value;
 			int x_max = (int)x_max_numericUpDown.Value;
-			int y_min = -(int)y_min_numericUpDown.Value;
-			int y_max = -(int)y_max_numericUpDown.Value;
+			int y_min = (int)y_min_numericUpDown.Value;
+			int y_max = (int)y_max_numericUpDown.Value;
 
 			var poly = new Polygon(new List<Pixel>() { new Pixel(x_min, y_min),
 					new Pixel(x_min, y_max), new Pixel(x_max, y_max), new Pixel(x_max, y_min) });
 
 			var bounds = poly.GetBounds((grafic_width, grafic_height));
-
+			bounds.RotateFlip(RotateFlipType.RotateNoneFlipY);
 			g.DrawImage(bounds, 0, 0);
         }
     }
