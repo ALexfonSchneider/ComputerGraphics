@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace lab_4
 {
+
+	class a { };
+	class b : a { };
+
 	public delegate float Function(float arg);
 
 	public class Pixel
@@ -17,6 +21,12 @@ namespace lab_4
 		{
 			this.x = x;
 			this.y = y;
+
+
+			a A = new a();
+			b? B = new b();
+
+			B = A as b;
 		}
 	}
 	class Line
@@ -160,12 +170,33 @@ namespace lab_4
 
 		public List<Line>? CutLine(Line line)
         {
+			object CutMutex = new object();
 			List<Pixel> points = new List<Pixel>();
+			List<Task> tasks = new List<Task>();
+
 			foreach(var edge in edges)
             {
-				var point = edge.intersection_point(line);
+				var task = new Task(
+					() =>
+					{
+						lock (CutMutex)
+						{
 
-				if(point != null) points.Add(point);
+							var point = edge.intersection_point(line);
+
+							if (point != null) points.Add(point);
+						}
+					}
+				);
+
+				tasks.Add(task);
+
+				task.Start();
+            }
+
+			foreach(var task in tasks)
+            {
+				task.Wait();
             }
 
 			if (points.Count == 0) return null;
@@ -192,7 +223,7 @@ namespace lab_4
 
 			var query_sort_by_x = from point in points_in_line_x_zone orderby point.x select point;
 
-			points_in_line_x_zone = query_sort_by_x.ToList();
+			points_in_line_x_zone = query_sort_by_x.AsParallel().ToList();
 
 			List<Line> lines = new List<Line>();
 			for (int i = 0; i < points_in_line_x_zone.Count; i++)

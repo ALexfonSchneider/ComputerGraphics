@@ -33,6 +33,29 @@ namespace lab_4
 
 			polygons = Polygon.ReadPolygons("../../../poly.txt");
 		}
+        //public void Draw_Random_Lines(int count_of_rand_point)
+        //{
+        //    Random rand = new Random();
+
+        //    int bound_x = grafic_width / 2 - 1;
+        //    int bound_y = grafic_height / 2 - 1;
+
+        //    for (int i = 0; i < count_of_rand_point; i++)
+        //    {
+        //        var rand_value_x1 = rand.Next(-bound_x, bound_x);
+        //        var rand_value_y1 = rand.Next(-bound_y, bound_y);
+
+        //        var rand_value_x2 = rand.Next(-bound_x, bound_x);
+        //        var rand_value_y2 = rand.Next(-bound_y, bound_y);
+
+        //        DrawLine(new Pixel(rand_value_x1, rand_value_y1),
+        //            new Pixel(rand_value_x2, rand_value_y2), (grafic_width, grafic_height));
+        //    }
+        //}
+
+
+        object DrawPanelMutex = new object();
+
 		public void Draw_Random_Lines(int count_of_rand_point)
 		{
 			Random rand = new Random();
@@ -40,19 +63,34 @@ namespace lab_4
 			int bound_x = grafic_width / 2 - 1;
 			int bound_y = grafic_height / 2 - 1;
 
-			for (int i = 0; i < count_of_rand_point; i++)
+			int n = 10;
+
+			var method = () =>
 			{
-				var rand_value_x1 = rand.Next(-bound_x, bound_x);
-				var rand_value_y1 = rand.Next(-bound_y, bound_y);
+				for (int i = 0; i < count_of_rand_point / n; i++)
+				{
+					var rand_value_x1 = rand.Next(-bound_x, bound_x);
+					var rand_value_y1 = rand.Next(-bound_y, bound_y);
 
-				var rand_value_x2 = rand.Next(-bound_x, bound_x);
-				var rand_value_y2 = rand.Next(-bound_y, bound_y);
+					var rand_value_x2 = rand.Next(-bound_x, bound_x);
+					var rand_value_y2 = rand.Next(-bound_y, bound_y);
 
-				DrawLine(new Pixel(rand_value_x1, rand_value_y1),
-					new Pixel(rand_value_x2, rand_value_y2), (grafic_width, grafic_height));
-			}
+					lock (DrawPanelMutex)
+					{
+						DrawLine(new Pixel(rand_value_x1, rand_value_y1),
+							new Pixel(rand_value_x2, rand_value_y2), (grafic_width, grafic_height));
+					}
+				}
+			};
+
+			for(int i = 0; i < n;i++)
+            {
+				Task.Factory.StartNew(method);
+            }
 		}
-		public void DrawLine(Pixel p1, Pixel p2, (int w, int h) panel_size)
+
+
+			public void DrawLine(Pixel p1, Pixel p2, (int w, int h) panel_size)
         {
 			if (boudns_off.Checked)
 			{
@@ -124,7 +162,10 @@ namespace lab_4
 			{
 				var map = CG.FillPolygon(poly, (draw_panel.Width, draw_panel.Height));
 				map.RotateFlip(RotateFlipType.RotateNoneFlipY);
-				g.DrawImage(map, 0, 0);
+				lock (DrawPanelMutex)
+				{
+					g.DrawImage(map, 0, 0);
+				}
 			}
 		}
 
