@@ -466,17 +466,20 @@ namespace lab_4
 			if (!any_in_bounds(p1, p2, x_min, x_max, y_min, y_max)) return;
 			if(all_in_bounds(p1, p2 ,x_min, x_max, y_min, y_max))
 			{
-				var map = Brethenhem_algoritm(p1, p2, panel_size);
-				map.RotateFlip(RotateFlipType.RotateNoneFlipY);
-				g.DrawImage(map, 0, 0);
-				return;
+				lock (g)
+				{
+					var map = Brethenhem_algoritm(p1, p2, panel_size);
+					map.RotateFlip(RotateFlipType.RotateNoneFlipY);
+					g.DrawImage(map, 0, 0);
+					return;
+				}
 			}
 
-			middle_point_clip(g, p1, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), 
-				x_min, x_max, y_min, y_max, panel_size);
+			Task.Factory.StartNew(() => middle_point_clip(g, p1, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), 
+				x_min, x_max, y_min, y_max, panel_size));
 
-			middle_point_clip(g, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), p2, 
-				x_min, x_max, y_min, y_max,  panel_size);
+			Task.Factory.StartNew(() => middle_point_clip(g, new Pixel((p1.x + p2.x) / 2, (p1.y + p2.y) / 2), p2, 
+				x_min, x_max, y_min, y_max,  panel_size));
 		}
 	}
 }

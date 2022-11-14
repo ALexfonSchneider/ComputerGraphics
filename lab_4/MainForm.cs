@@ -129,7 +129,10 @@ namespace lab_4
 				if (poly == null) return;
 				var map_boudns = poly.GetBounds(panel_size);
 				map_boudns.RotateFlip(RotateFlipType.RotateNoneFlipY);
-				g.DrawImage(map_boudns, 0, 0);
+				lock (g)
+				{
+					g.DrawImage(map_boudns, 0, 0);
+				}
 			}
 			
 		}
